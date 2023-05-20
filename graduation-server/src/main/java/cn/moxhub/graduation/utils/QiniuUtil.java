@@ -9,9 +9,16 @@ import com.qiniu.storage.Configuration;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import com.qiniu.util.Base64;
+import com.qiniu.util.StringMap;
+import com.qiniu.util.UrlSafeBase64;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
@@ -47,7 +54,7 @@ public class QiniuUtil {
         // 生成上传凭证，然后准备上传
         UploadManager uploadManager = new UploadManager(cfg);
 
-        String fileName = file.getOriginalFilename();
+        String fileName = file.getName();
         String imgName = StringUtil.getRandomImgName(fileName);
         try {
             //    Auth auth = Auth.create(ACCESS_KEY, SECRET_KEY);
@@ -73,6 +80,34 @@ public class QiniuUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static String getUpToken() {
+        return auth.uploadToken(BUCKETNAME, null, 3600, new StringMap().put("insertOnly", 1));
+    }
+
+    public static void put64image(String file) throws Exception {
+
+        String imgName = StringUtil.getRandomImgName("test.jpg");
+
+        FileInputStream fis = null;
+        int l = (int) (new File(file).length());
+        byte[] src = new byte[l];
+        fis = new FileInputStream(new File(file));
+        fis.read(src);
+        String file64 = Base64.encodeToString(src, 0);
+        String url = "http://upload-z2.qiniup.com/putb64/" + l+"/key/"+ UrlSafeBase64.encodeToString(imgName);
+        //非华东空间需要根据注意事项 1 修改上传域名
+        RequestBody rb = RequestBody.create(null, file64);
+        Request request = new Request.Builder().
+                url(url).
+                addHeader("Content-Type", "application/octet-stream")
+                .addHeader("Authorization", "UpToken " + getUpToken())
+                .post(rb).build();
+        System.out.println(request.headers());
+        OkHttpClient client = new OkHttpClient();
+        okhttp3.Response response = client.newCall(request).execute();
+        System.out.println(response);
     }
 }
 

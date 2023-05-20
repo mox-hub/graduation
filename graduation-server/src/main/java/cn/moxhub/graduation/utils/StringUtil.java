@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class StringUtil {
     public static String getRandomImgName(String fileName) {
-
+        System.out.println(fileName);
         // 获取文件后缀
         int index = fileName.lastIndexOf(".");
         String suffix = fileName.substring(index);

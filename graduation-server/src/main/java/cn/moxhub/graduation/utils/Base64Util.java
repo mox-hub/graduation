@@ -69,6 +69,5 @@ public class Base64Util {
         } catch (Exception e) {
             return false;
         }
-
     }
 }

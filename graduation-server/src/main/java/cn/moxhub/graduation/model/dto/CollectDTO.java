@@ -9,6 +9,7 @@ package cn.moxhub.graduation.model.dto;
  **/
 
 public class CollectDTO {
+
     Integer collectId;
     Integer userId;
     Integer imageId;

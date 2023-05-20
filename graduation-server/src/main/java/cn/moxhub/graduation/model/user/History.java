@@ -2,8 +2,11 @@ package cn.moxhub.graduation.model.user;
 
 import cn.moxhub.graduation.model.sd.Text2ImgResponse;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
@@ -14,12 +17,13 @@ import java.util.Date;
  * @Date :2023/5/3 10:25
  * @Version : v1.0
  **/
-@TableName("history")
+@TableName(value = "history",autoResultMap = true)
 public class History {
     @TableId(type = IdType.AUTO)
     private Integer historyId;
     private Integer userid;
     private Date generateTime;
+    @TableField(typeHandler = JacksonTypeHandler.class)
     private Text2ImgResponse textToImage;
 
     public Integer getHistoryId() {

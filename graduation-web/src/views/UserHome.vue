@@ -3,11 +3,13 @@
     <div class="page">
         <a-layout>
             <a-layout-header>
-                <Header></Header>
+                <Header @change-page="changePage"></Header>
             </a-layout-header>
-            <Generate></Generate>
+            <Generate v-if="showPage == 'generate'"></Generate>
+            <Collect v-if="showPage == 'collect'"></Collect>
             <!-- <Menu></Menu> -->
             <a-layout-footer>
+                123
             </a-layout-footer>
         </a-layout>
 
@@ -19,7 +21,15 @@
 import Header from '../components/Header.vue'
 import Menu from '../components/Menu.vue'
 import Generate from './user/Generate.vue'
+import Collect from './user/Collect.vue'
 
+// 控制页面展示的组件，由header组件传值
+let showPage = ref("collect")
+
+const changePage = (name: any) => {
+    showPage.value = name
+    console.log(name);
+}
 
 </script>
 <style scoped>
