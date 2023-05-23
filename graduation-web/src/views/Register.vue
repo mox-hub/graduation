@@ -3,7 +3,7 @@
     <div>
         <a-form v-if="flag == 'login'" direction="vertical" class="login-container" :model="form"
             :style="{ width: '500px' }">
-            <h2 class="login_title">用户登录</h2>
+            <h2 class="login_title">用户注册</h2>
             <a-form-item field="userName" label="用户名" validate-trigger="input" required>
                 <a-input v-model="form.userName" placeholder="请输入你的用户名..." />
                 <template #extra>
@@ -12,6 +12,15 @@
             </a-form-item>
             <a-form-item field="password" label="密码" validate-trigger="input" required>
                 <a-input v-model="form.password" placeholder="请输入你的密码..." />
+                <template #extra>
+                    <div>Used to login</div>
+                </template>
+                <template #help>
+                    <div>Custom valitae message</div>
+                </template>
+            </a-form-item>
+            <a-form-item field="password" label="重复密码" validate-trigger="input" required>
+                <a-input v-model="form.password" placeholder="请再次输入你的密码..." />
                 <template #extra>
                     <div>Used to login</div>
                 </template>

@@ -1,6 +1,6 @@
 <template>
     <!-- 首页导航栏 -->
-    <a-page-header :style="{ background: 'var(--color-bg-2)' }" title="Stable-diffusion" :show-back=false>
+    <a-page-header :style="{ background: 'var(--color-bg-1)' }" title="Stable-diffusion" :show-back=false>
         <template #subtitle>
             <a-space>
                 <span>A text to image AI generation</span>
@@ -12,7 +12,7 @@
                     <a-divider direction="vertical" />
                     <a-button shape="round" name="Collect" @click="changePage('collect')">我的收藏</a-button>
                     <a-divider direction="vertical" />
-                    <a-button shape="round" status="success" @click="changePage('generate')">关于我</a-button>
+                    <a-button shape="round" status="success" @click="changePage('user')">关于我</a-button>
                 </a-space>
             </a-space>
         </template>

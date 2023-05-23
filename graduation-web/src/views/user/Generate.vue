@@ -1,205 +1,233 @@
 <template>
     <a-layout>
-        <a-layout-content>
-            <!-- 页面标题 -->
-            <a-typography class="title-box">
-                <a-typography-title bold>
-                    Stable-diffusion：通过文本生成风格化图片
-                </a-typography-title>
-            </a-typography>
-            <!-- card -->
-            <a-card class="body-card">
-                <!-- 图片预览框 -->
-                <a-image-preview-group>
-                    <a-space>
-                        <div v-for="item in imageList" :key="item">
-                            <a-image fit="cover" :src="item" v-model:width="imageData.width"
-                                v-model:height="imageData.height" />
-                        </div>
-                    </a-space>
-                </a-image-preview-group>
-                <a-card-meta>
-                    <template #description>
-                        <!-- step 1 输入正向文本 -->
-                        <a-space direction="vertical" :style="{ width: '100%' }">
-                            <a-typography-text type="secondary" :style="{ marginLeft: '10px', fontSize: '24px' }" bold>
-                                请输入要生成图片的文本{{ imageData }}
-                            </a-typography-text>
-
-                            <a-textarea class="textarea" placeholder="请输入正向文本" :max-length="128" allow-clear
-                                v-model:model-value="imageData.prompt" show-word-limit />
-                            <a-textarea class="textarea" placeholder="请输入反向文本"
-                                v-model:model-value="imageData.negative_prompt"
-                                :max-length="{ length: 128, errorOnly: true }" allow-clear show-word-limit />
-
-                        </a-space>
-
-                        <a-button type="primary" shape="round" size="large" @click="inputTime">生成</a-button>
-                    </template>
-                </a-card-meta>
-                <template #actions>
-                </template>
-                <template #cover>
-                </template>
-            </a-card>
-        </a-layout-content>
         <!-- 侧边栏功能：选择参数 -->
-        <a-layout-sider :resize-directions="['left']">
-            <!-- step1: 选择图片数量 -->
-            <div class="choose-num">
-                <a-typography-title :heading="6" :style="{ marginLeft: '10px' }">
-                    选择生成图片数量
-                </a-typography-title>
-                <a-slider :default-value="1" :style="{
-                    width: '340px', paddingBottom: '0px'
-                }" :min="1" :max="9" :marks="marks" v-model:model-value="imageData.batch_size" />
-            </div>
-            <!-- 其他选项 -->
-            <a-collapse :default-active-key="['1', 2]" :bordered="false" expand-icon-position="right">
-                <!-- step2: 选择图片规格 -->
-                <a-collapse-item header="选择生成图片规格" :style="customStyle" key="1">
-                    <!-- 选择图片数量 -->
-                    <a-space direction="vertical">
+        <a-layout-sider class="layout-sider">
+            <a-space direction="vertical" style="margin-top: 20px;margin-bottom: 100px;">
+                <a-textarea class="textarea" placeholder="请输入正向文本" :max-length="128" allow-clear
+                    v-model:model-value="imageData.prompt" show-word-limit />
+                <a-textarea class="textarea" placeholder="请输入反向文本" v-model:model-value="imageData.negative_prompt"
+                    style="margin-bottom: 20px;" :max-length="{ length: 128, errorOnly: true }" allow-clear
+                    show-word-limit />
+                <!-- 其他选项 -->
+                <a-collapse :default-active-key="['1', 2]" :bordered="false" expand-icon-position="right">
+                    <!-- step2: 选择图片规格 -->
+                    <a-collapse-item header="选择生成图片规格" :style="customStyle" key="1">
+                        <!-- 选择图片数量 -->
+                        <a-space direction="vertical">
+                            <a-radio-group>
+                                <template v-for="item in 3" :key="item">
+                                    <a-radio :value="item" :style="{ marginRight: '4px' }">
+                                        <template #radio="{ checked }">
+                                            <a-space align="start" class="custom-radio-card"
+                                                :class="{ 'custom-radio-card-checked': checked }"
+                                                :style="{ backgroundImage: 'url(' + 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp' + ')' }">
+                                                <div className="custom-radio-card-mask-dot">
+                                                    <icon-check />
+                                                </div>
+                                                <div>
+                                                    <div className="custom-radio-card-title">
+                                                        Card
+                                                    </div>
+                                                </div>
+                                            </a-space>
+                                        </template>
+                                    </a-radio>
+                                </template>
+                            </a-radio-group>
+                            <a-slider :min="128" :max="512" :step="32" :default-value="128"
+                                v-model:model-value="imageData.width" :show-ticks="true" :style="{ width: '100%' }"
+                                show-input />
+                            <a-slider :min="128" :max="512" :step="32" :default-value="128"
+                                v-model:model-value="imageData.height" :show-ticks="true" :style="{ width: '100%' }"
+                                show-input />
+                        </a-space>
+                    </a-collapse-item>
+                    <!-- step3: 选择生成步数 -->
+                    <a-collapse-item :style="customStyle" key="2">
+                        <template #header>
+                            选择生成步数
+                            <a-tooltip content="生成步数决定了生成图片的质量" position="bottom">
+                                <icon-question-circle-fill />
+                            </a-tooltip>
+                        </template>
+                        <template #extra>
+                            <span @click.stop>
+                                <a-switch type="line" @change="disabledImgStyle" v-model="stepChecked" checked-value="on"
+                                    unchecked-value="off">
+                                    <template #checked-icon>
+                                        <icon-check />
+                                    </template>
+                                    <template #unchecked-icon>
+                                        <icon-close />
+                                    </template>
+                                </a-switch>
+                            </span>
+                        </template>
+                        <a-slider :min="10" :max="100" :default-value="10" :style="{ width: '100%' }" show-input
+                            v-model:model-value="imageData.steps" :disabled="stepChecked == 'off'" />
+                    </a-collapse-item>
+                    <!-- step4: 选择图片风格 -->
+                    <a-collapse-item :style="customStyle" :key="3">
+                        <template #header>
+                            选择图片风格
+                            <a-tooltip content="图片风格可以规范你的生成图片的色彩类型" position="bottom">
+                                <icon-question-circle-fill />
+                            </a-tooltip>
+                        </template>
+                        <template #extra>
+                            <span @click.stop>
+                                <a-switch type="line" @change="disabledImgStyle" v-model="styleChecked" checked-value="on"
+                                    unchecked-value="off">
+                                    <template #checked-icon>
+                                        <icon-check />
+                                    </template>
+                                    <template #unchecked-icon>
+                                        <icon-close />
+                                    </template>
+                                </a-switch>
+                            </span>
+                        </template>
                         <a-radio-group>
-                            <template v-for="item in 3" :key="item">
-                                <a-radio :value="item" :style="{ marginRight: '4px' }">
+                            <template v-for="item in 9" :key="item">
+                                <a-radio :value="item" :style="{ marginRight: '4px' }" :disabled="styleChecked == 'off'">
                                     <template #radio="{ checked }">
                                         <a-space align="start" class="custom-radio-card"
-                                            :class="{ 'custom-radio-card-checked': checked }"
-                                            :style="{ backgroundImage: 'url(' + 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp' + ')' }">
-                                            <div className="custom-radio-card-mask-dot">
-                                                <icon-check />
+                                            :class="{ 'custom-radio-card-checked': checked }">
+                                            <div className="custom-radio-card-mask">
+                                                <div className="custom-radio-card-mask-dot" />
                                             </div>
                                             <div>
                                                 <div className="custom-radio-card-title">
-                                                    Card
+                                                    Card {{ item }}
                                                 </div>
+                                                <img :style="{ width: '100%', height: '100%' }" alt="dessert"
+                                                    src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp" />
                                             </div>
                                         </a-space>
                                     </template>
                                 </a-radio>
                             </template>
                         </a-radio-group>
-                        <a-slider :min="128" :max="512" :step="32" :default-value="128"
-                            v-model:model-value="imageData.width" :show-ticks="true" :style="{ width: '100%' }"
-                            show-input />
-                        <a-slider :min="128" :max="512" :step="32" :default-value="128"
-                            v-model:model-value="imageData.height" :show-ticks="true" :style="{ width: '100%' }"
-                            show-input />
-                    </a-space>
-                </a-collapse-item>
-                <!-- step3: 选择生成步数 -->
-                <a-collapse-item header="选择生成步数" :style="customStyle" key="2">
-                    <template #extra>
-                        <span @click.stop>
-                            <a-switch type="line" @change="disabledImgStyle" v-model="stepChecked" checked-value="on"
-                                unchecked-value="off">
-                                <template #checked-icon>
-                                    <icon-check />
-                                </template>
-                                <template #unchecked-icon>
-                                    <icon-close />
-                                </template>
-                            </a-switch>
-                        </span>
-                    </template>
-                    <a-slider :min="10" :max="100" :default-value="10" :style="{ width: '100%' }" show-input
-                        v-model:model-value="imageData.steps" :disabled="stepChecked == 'off'" />
-                </a-collapse-item>
-                <!-- step4: 选择图片风格 -->
-                <a-collapse-item header="选择图片风格" :style="customStyle" :key="3">
-                    <template #extra>
-                        <span @click.stop>
-                            <a-switch type="line" @change="disabledImgStyle" v-model="styleChecked" checked-value="on"
-                                unchecked-value="off">
-                                <template #checked-icon>
-                                    <icon-check />
-                                </template>
-                                <template #unchecked-icon>
-                                    <icon-close />
-                                </template>
-                            </a-switch>
-                        </span>
-                    </template>
-                    <a-radio-group>
-                        <template v-for="item in 15" :key="item">
-                            <a-radio :value="item" :style="{ marginRight: '4px' }" :disabled="styleChecked == 'off'">
-                                <template #radio="{ checked }">
-                                    <a-space align="start" class="custom-radio-card"
-                                        :class="{ 'custom-radio-card-checked': checked }">
-                                        <div className="custom-radio-card-mask">
-                                            <div className="custom-radio-card-mask-dot" />
-                                        </div>
-                                        <div>
-                                            <div className="custom-radio-card-title">
-                                                Card {{ item }}
-                                            </div>
-                                            <img :style="{ width: '100%', height: '100%' }" alt="dessert"
-                                                src="https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp" />
-                                        </div>
-                                    </a-space>
-                                </template>
-                            </a-radio>
+                    </a-collapse-item>
+                    <!-- step5: 选择关键词 -->
+                    <a-collapse-item :style="customStyle" key="4">
+                        <template #header>
+                            选择关键词
+                            <a-tooltip content="图片风格可以规范你的生成图片的色彩类型" position="bottom">
+                                <icon-question-circle-fill />
+                            </a-tooltip>
                         </template>
-                    </a-radio-group>
-                </a-collapse-item>
-                <!-- step5: 选择关键词 -->
-                <a-collapse-item header="选择关键词" :style="customStyle" key="4">
-                    <template #extra>
-                        <span @click.stop>
-                            <a-switch type="line" @change="disabledImgStyle" v-model="keywordChecked" checked-value="on"
-                                unchecked-value="off">
-                                <template #checked-icon>
-                                    <icon-check />
-                                </template>
-                                <template #unchecked-icon>
-                                    <icon-close />
-                                </template>
-                            </a-switch>
-                        </span>
-                    </template>
-                    <div :style="{ marginTop: '20px' }">
-                        <a-checkbox-group :default-value="[1]" :disabled="keywordChecked == 'off'">
-                            <template v-for="item in 2" :key="item">
-                                <a-checkbox :value="item">
-                                    <template #checkbox="{ checked }">
-                                        <a-space align="start" class="custom-checkbox-card"
-                                            :class="{ 'custom-checkbox-card-checked': checked }">
-                                            <div className="custom-checkbox-card-title">
-                                                Checkbox Card {{ item }}
-                                            </div>
-                                        </a-space>
+                        <template #extra>
+                            <span @click.stop>
+                                <a-switch type="line" @change="disabledImgStyle" v-model="keywordChecked" checked-value="on"
+                                    unchecked-value="off">
+                                    <template #checked-icon>
+                                        <icon-check />
                                     </template>
-                                </a-checkbox>
-                            </template>
-                        </a-checkbox-group>
-                    </div>
-                </a-collapse-item>
-                <!-- step6: 选择采样方法 -->
-                <a-collapse-item header="选择采样方法" :style="customStyle" key="6">
-                    <template #extra>
-                        <span @click.stop>
-                            <a-switch type="line" @change="disabledImgStyle" v-model="sampleChecked" checked-value="on"
-                                unchecked-value="off">
-                                <template #checked-icon>
-                                    <icon-check />
+                                    <template #unchecked-icon>
+                                        <icon-close />
+                                    </template>
+                                </a-switch>
+                            </span>
+                        </template>
+                        <div :style="{ marginTop: '20px' }">
+                            <a-checkbox-group :default-value="[1]" :disabled="keywordChecked == 'off'">
+                                <template v-for="item in 2" :key="item">
+                                    <a-checkbox :value="item">
+                                        <template #checkbox="{ checked }">
+                                            <a-space align="start" class="custom-checkbox-card"
+                                                :class="{ 'custom-checkbox-card-checked': checked }">
+                                                <div className="custom-checkbox-card-title">
+                                                    Checkbox Card {{ item }}
+                                                </div>
+                                            </a-space>
+                                        </template>
+                                    </a-checkbox>
                                 </template>
-                                <template #unchecked-icon>
-                                    <icon-close />
-                                </template>
-                            </a-switch>
-                        </span>
-                    </template>
-                    <a-select :style="{ width: '100%' }" v-model="sampleValue" placeholder="Please select ..." allow-clear
-                        :disabled="sampleChecked == 'off'">
-                        <a-option>Beijing</a-option>
-                        <a-option>Shanghai</a-option>
-                        <a-option>Guangzhou</a-option>
-                        <a-option disabled>Disabled</a-option>
+                            </a-checkbox-group>
+                        </div>
+                    </a-collapse-item>
+                    <!-- step6: 选择采样方法 -->
+                    <a-collapse-item :style="customStyle" key="6">
+                        <template #header>
+                            选择采样方法
+                            <a-tooltip content="采样方法指图片生成时，进行去噪操作的采样方法" position="bottom">
+                                <icon-question-circle-fill />
+                            </a-tooltip>
+                        </template>
+                        <template #extra>
+                            <span @click.stop>
+                                <a-switch type="line" @change="disabledImgStyle" v-model="sampleChecked" checked-value="on"
+                                    unchecked-value="off">
+                                    <template #checked-icon>
+                                        <icon-check />
+                                    </template>
+                                    <template #unchecked-icon>
+                                        <icon-close />
+                                    </template>
+                                </a-switch>
+                            </span>
+                        </template>
+                        <a-select :style="{ width: '100%' }" v-model="sampleValue" placeholder="Please select ..."
+                            allow-clear :disabled="sampleChecked == 'off'">
+                            <a-option>Beijing</a-option>
+                            <a-option>Shanghai</a-option>
+                            <a-option>Guangzhou</a-option>
+                            <a-option disabled>Disabled</a-option>
+                        </a-select>
+                    </a-collapse-item>
+                </a-collapse>
+            </a-space>
+            <!-- 按钮控件 -->
+            <a-space direction="vertical">
+                <a-divider />
+                <a-space class="button-box">
+                    <!-- 选择图片数量 -->
+                    <a-select v-model="imageData.batch_size" default-value="1"
+                        :style="{ width: '140px', borderRadius: '10px' }" size="large" placeholder="选择图片数量">
+                        <template #label="{ data }">
+                            <span>生成 {{ data?.label }} 张图片</span>
+                        </template>
+                        <a-option>1</a-option>
+                        <a-option>2</a-option>
+                        <a-option>3</a-option>
+                        <a-option>4</a-option>
+                        <a-option>5</a-option>
+                        <a-option>6</a-option>
+                        <a-option>7</a-option>
+                        <a-option>8</a-option>
+                        <a-option>9</a-option>
                     </a-select>
-                </a-collapse-item>
-            </a-collapse>
+                    <a-divider />
+                    <a-button type="primary" size="large" :style="{ width: '200px', borderRadius: '10px' }"
+                        @click="inputTime">生成</a-button>
+                </a-space>
+            </a-space>
         </a-layout-sider>
+        <a-layout-content class="layout-content">
+            <!-- 页面标题 -->
+            <div class="title-box">
+                <div class="title-text">
+                    Stable-diffusion：通过文本生成风格化图片
+                </div>
+                {{ imageData }}
+            </div>
+            <!-- card -->
+            <a-card class="body-card" style="text-align: center;">
+                <!-- 图片预览框 -->
+                <a-image-preview-group>
+                    <a-space>
+                        <div v-for="item in imageList" :key="item">
+                            <a-image fit="cover" :src="item" v-model:width="width" v-model:height="height" />
+                        </div>
+                    </a-space>
+                </a-image-preview-group>
+                <template #actions>
+                </template>
+                <template #cover>
+                </template>
+            </a-card>
+        </a-layout-content>
     </a-layout>
 </template>
 
@@ -221,6 +249,7 @@ const imageData = ref({
 const imageList = ref(["https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/cd7a1aaea8e1c5e3d26fe2591e561798.png~tplv-uwbnlip3yd-webp.webp"])
 
 const customStyle = {
+    width: '384px',
     borderRadius: '6px',
     marginLeft: '6px',
     marginRight: '6px',
@@ -257,13 +286,25 @@ const text2img1 = (data: any) => {
 const inputTime = (e: Event) => {
     text2img1(imageData.value);
 }
+
+const width = computed(() => {
+    return imageData.value.width * 2
+})
+const height = computed(() => {
+    return imageData.value.height * 2
+})
 </script>
 <style scoped>
-.arco-layout-sider {
-    width: 420px;
+.layout-sider {
+    text-align: center;
     background-color: var(--color-neutral-1);
     min-width: 420px;
-    max-width: 1200px;
+    height: 1200px;
+}
+
+.layout-content {
+    /* background-color: var(--color-bg-3); */
+    min-width: 420px;
     height: 1200px;
 }
 
@@ -275,13 +316,23 @@ const inputTime = (e: Event) => {
 .title-box {
     display: table;
     margin: auto;
-    /* padding-top: 20px; */
+    padding: 40px;
+}
+
+.title-text {
+    background-image: linear-gradient(90deg, #dec36d, #62ffb8 50%, #62f2ff 98%);
+    -webkit-background-clip: text;
+    color: transparent;
+    background-clip: text;
+    background-size: 300% 100%;
+    font-size: 50px;
+    font-weight: 600;
 }
 
 .body-card {
     display: table;
     margin: auto;
-    width: 80%;
+    width: 60%;
     height: 60%;
     margin-top: 100rpx;
     padding: 60px;
@@ -289,7 +340,8 @@ const inputTime = (e: Event) => {
 }
 
 .textarea {
-    width: 80%;
+    border-radius: 6px;
+    width: 90%;
 }
 
 .card-demo {
@@ -302,6 +354,14 @@ const inputTime = (e: Event) => {
     height: 40px;
     border-radius: 20px;
     margin-top: 100rpx;
+}
+
+.button-box {
+    margin: 10px;
+    text-align: center;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
 }
 
 .choose-num {

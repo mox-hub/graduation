@@ -17,8 +17,7 @@ const routes = [
     meta: {
       title: '首页',
     },
-    component: () =>
-      import(/* webpackChunkName: "editor" */ '../views/UserHome.vue'),
+    component: () => import('../views/UserHome.vue'),
   },
   {
     path: '/login',
@@ -26,17 +25,31 @@ const routes = [
     meta: {
       title: '登录',
     },
-    component: () =>
-      import(/* webpackChunkName: "editor" */ '../views/Login.vue'),
+    component: () => import('../views/Login.vue'),
+  },
+  {
+    path: '/register',
+    name: 'register',
+    meta: {
+      title: '登录',
+    },
+    component: () => import('../views/Register.vue'),
   },
   {
     path: '/collect',
-    name: 'user',
+    name: 'collect',
     meta: {
       title: '用户收藏页面',
     },
-    component: () =>
-      import(/* webpackChunkName: "editor" */ '../views/user/Collect.vue'),
+    component: () => import('../views/user/Collect.vue'),
+  },
+  {
+    path: '/user',
+    name: 'user',
+    meta: {
+      title: '用户页面',
+    },
+    component: () => import('../views/user/User.vue'),
   },
 ]
 
