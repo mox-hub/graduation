@@ -72,16 +72,6 @@ public class ResponseDTO<T> {
         this.pageTotal = pageTotal;
     }
 
-    public ResponseDTO getSuccess() {
-        return new ResponseDTO(0,"操作成功");
-    }
-    public ResponseDTO getSuccess(T data) {
-        return new ResponseDTO(0,"操作成功",data);
-    }
-    public ResponseDTO getFail() {
-        return new ResponseDTO(1,"操作失败");
-    }
-
     public int getPageTotal() {
         return pageTotal;
     }

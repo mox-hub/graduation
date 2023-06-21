@@ -1,5 +1,7 @@
 package cn.moxhub.graduation.service;
 
+import cn.moxhub.graduation.model.dto.ImageDTO;
+import cn.moxhub.graduation.model.dto.ResponseDTO;
 import cn.moxhub.graduation.model.user.Image;
 
 /**
@@ -11,5 +13,9 @@ import cn.moxhub.graduation.model.user.Image;
  **/
 
 public interface ImageService {
-    Object InsertImage(Image image);
+    ResponseDTO createImage(ImageDTO imageDTO);
+
+    ResponseDTO getImageByImageId(ImageDTO imageDTO);
+
+    ResponseDTO getImageList(ImageDTO imageDTO);
 }

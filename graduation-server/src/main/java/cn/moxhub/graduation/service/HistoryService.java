@@ -12,15 +12,15 @@ import cn.moxhub.graduation.model.dto.ResponseDTO;
  **/
 
 public interface HistoryService {
-    ResponseDTO getHistoryList(HistoryDTO history);
+    ResponseDTO getHistoryList(HistoryDTO historyDTO);
 
-    ResponseDTO getHistoryByUserId(HistoryDTO history);
+    ResponseDTO getHistoryByUserId(HistoryDTO historyDTO);
 
-    ResponseDTO getHistoryListByHistoryId(HistoryDTO history);
+    ResponseDTO getHistoryByHistoryId(HistoryDTO historyDTO);
 
-    ResponseDTO deleteHistoryByHistoryId(HistoryDTO history);
+    ResponseDTO deleteHistoryByHistoryId(HistoryDTO historyDTO);
 
-    ResponseDTO deleteHistoryByUserId(HistoryDTO history);
+    ResponseDTO deleteHistoryByUserId(HistoryDTO historyDTO);
 
-    ResponseDTO createHistory(HistoryDTO history);
+    ResponseDTO createHistory(HistoryDTO historyDTO);
 }

@@ -1,5 +1,8 @@
 package cn.moxhub.graduation.service;
 
+import cn.moxhub.graduation.model.dto.LoginDTO;
+import cn.moxhub.graduation.model.dto.ResponseDTO;
+
 /**
  * @ClassName :UserService
  * @Description :
@@ -9,5 +12,5 @@ package cn.moxhub.graduation.service;
  **/
 
 public interface UserService {
-
+    ResponseDTO login(LoginDTO loginDTO);
 }

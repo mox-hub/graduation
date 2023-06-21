@@ -8,7 +8,7 @@ export const text2img = (url: string, data: any) => {
     })
 }
 
-export const insertData = (data: JSON, path: String) => {
+export const insertData = (data: any, path: String) => {
     return request({
         url: 'http://localhost:8080' + path,
         method: 'post',
@@ -16,23 +16,7 @@ export const insertData = (data: JSON, path: String) => {
     })
 }
 
-export const insertDataParam = (data: JSON, path: String) => {
-    return request({
-        url: 'http://localhost:8080' + path,
-        method: 'post',
-        params: data
-    })
-}
-
-export const deleteData = (data: JSON, path: String) => {
-    return request({
-        url: 'http://localhost:8080' + path,
-        method: 'post',
-        params: data
-    })
-}
-
-export const updateData = (data: JSON, path: String) => {
+export const deleteData = (data: any, path: String) => {
     return request({
         url: 'http://localhost:8080' + path,
         method: 'post',
@@ -40,18 +24,26 @@ export const updateData = (data: JSON, path: String) => {
     })
 }
 
-export const getDataParam = (query: String, path: String) => {
+export const updateData = (data: any, path: String) => {
     return request({
         url: 'http://localhost:8080' + path,
-        method: 'get',
-        params: query
+        method: 'post',
+        data: data
+    })
+}
+
+export const getData = (data: any, path: String) => {
+    return request({
+        url: 'http://localhost:8080' + path,
+        method: 'post',
+        data: data
     })
 }
 
 export const getDataNoParam = (path: String) => {
     return request({
         url: 'http://localhost:8080' + path,
-        method: 'get',
+        method: 'post',
         params: ""
     })
 }

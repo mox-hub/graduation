@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-document.body.setAttribute('arco-theme', 'dark')
+// document.body.setAttribute('arco-theme', 'dark')
 </script>
 
 <style scoped></style>

@@ -1,12 +1,9 @@
 package cn.moxhub.graduation.model.user;
 
-import cn.moxhub.graduation.model.sd.Text2ImgResponse;
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import lombok.experimental.Accessors;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
 
@@ -21,10 +18,13 @@ import java.util.Date;
 public class History {
     @TableId(type = IdType.AUTO)
     private Integer historyId;
-    private Integer userid;
+    private Integer userId;
+    private Integer imageId;
+    private Integer promptId;
+    private Integer imageNum;
+    private String historyType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date generateTime;
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private Text2ImgResponse textToImage;
 
     public Integer getHistoryId() {
         return historyId;
@@ -34,12 +34,44 @@ public class History {
         this.historyId = historyId;
     }
 
-    public Integer getUserid() {
-        return userid;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserid(Integer userid) {
-        this.userid = userid;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getImageId() {
+        return imageId;
+    }
+
+    public void setImageId(Integer imageId) {
+        this.imageId = imageId;
+    }
+
+    public Integer getPromptId() {
+        return promptId;
+    }
+
+    public void setPromptId(Integer promptId) {
+        this.promptId = promptId;
+    }
+
+    public Integer getImageNum() {
+        return imageNum;
+    }
+
+    public void setImageNum(Integer imageNum) {
+        this.imageNum = imageNum;
+    }
+
+    public String getHistoryType() {
+        return historyType;
+    }
+
+    public void setHistoryType(String historyType) {
+        this.historyType = historyType;
     }
 
     public Date getGenerateTime() {
@@ -50,21 +82,16 @@ public class History {
         this.generateTime = generateTime;
     }
 
-    public Text2ImgResponse getTextToImage() {
-        return textToImage;
-    }
-
-    public void setTextToImage(Text2ImgResponse textToImage) {
-        this.textToImage = textToImage;
-    }
-
     @Override
     public String toString() {
         return "History{" +
                 "historyId=" + historyId +
-                ", userid=" + userid +
+                ", userId=" + userId +
+                ", imageId=" + imageId +
+                ", promptId=" + promptId +
+                ", imageNum=" + imageNum +
+                ", historyType='" + historyType + '\'' +
                 ", generateTime=" + generateTime +
-                ", textToImage=" + textToImage +
                 '}';
     }
 }

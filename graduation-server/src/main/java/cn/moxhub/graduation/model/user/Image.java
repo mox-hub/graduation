@@ -15,10 +15,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 public class Image {
     @TableId(type = IdType.AUTO)
     private Integer imageId;
-    private String imageName;
     private String imageUrl;
-    private Integer imageHeight;
-    private Integer imageWidth;
 
     public Integer getImageId() {
         return imageId;
@@ -26,14 +23,6 @@ public class Image {
 
     public void setImageId(Integer imageId) {
         this.imageId = imageId;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
     }
 
     public String getImageUrl() {
@@ -44,30 +33,11 @@ public class Image {
         this.imageUrl = imageUrl;
     }
 
-    public Integer getImageHeight() {
-        return imageHeight;
-    }
-
-    public void setImageHeight(Integer imageHeight) {
-        this.imageHeight = imageHeight;
-    }
-
-    public Integer getImageWidth() {
-        return imageWidth;
-    }
-
-    public void setImageWidth(Integer imageWidth) {
-        this.imageWidth = imageWidth;
-    }
-
     @Override
     public String toString() {
         return "Image{" +
                 "imageId=" + imageId +
-                ", imageName='" + imageName + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
-                ", imageHeight=" + imageHeight +
-                ", imageWidth=" + imageWidth +
                 '}';
     }
 }

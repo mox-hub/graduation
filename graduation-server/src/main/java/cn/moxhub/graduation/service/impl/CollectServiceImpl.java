@@ -4,6 +4,7 @@ import cn.moxhub.graduation.mapper.CollectMapper;
 import cn.moxhub.graduation.model.dto.CollectDTO;
 import cn.moxhub.graduation.model.dto.ResponseDTO;
 import cn.moxhub.graduation.model.user.Collect;
+import cn.moxhub.graduation.model.vo.CollectImageVO;
 import cn.moxhub.graduation.service.CollectService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -39,15 +40,16 @@ public class CollectServiceImpl implements CollectService {
 
     @Override
     public ResponseDTO getCollectByUserId(CollectDTO req) {
-        try {
-            Page<Collect> page = new Page<>(req.getPageIndex(),req.getPageSize());
-            QueryWrapper<Collect> wrapper = new QueryWrapper<>();
+//        try {
+            Page<CollectImageVO> page = new Page<>(req.getPageIndex(),req.getPageSize());
+            QueryWrapper<CollectImageVO> wrapper = new QueryWrapper<>();
             wrapper.eq("user_id", req.getUserId());
-            collectMapper.selectPage(page,wrapper);
+            collectMapper.getCollectImageVo(page,wrapper);
             return new ResponseDTO(0,"操作成功",page.getRecords(),(int)page.getTotal());
-        } catch (Exception e) {
-            return new ResponseDTO(1,"操作失败");
-        }
+//        } catch (Exception e) {
+//            log.error("操作失败");
+//            return new ResponseDTO(1,"操作失败");
+//        }
     }
 
     @Override
@@ -63,6 +65,7 @@ public class CollectServiceImpl implements CollectService {
     @Override
     public ResponseDTO deleteCollectByCollectId(CollectDTO req) {
         try {
+            System.out.println(req.getCollectId());
             collectMapper.deleteById(req.getCollectId());
             return new ResponseDTO(0,"操作成功");
         } catch (Exception e) {
@@ -85,10 +88,14 @@ public class CollectServiceImpl implements CollectService {
     @Override
     public ResponseDTO createCollect(CollectDTO req) {
         try {
+            System.out.println(req.toString());
             Collect collect = new Collect();
-            collect.setCollectId(req.getCollectId());
             collect.setUserId(req.getUserId());
             collect.setImageId(req.getImageId());
+            collect.setPromptId(req.getPromptId());
+            collect.setCollectId(req.getCollectId());
+            collect.setRate(req.getRate());
+            collect.setIsShared(req.getIsShared());
             collectMapper.insert(collect);
             return new ResponseDTO(0,"操作成功");
         } catch (Exception e) {

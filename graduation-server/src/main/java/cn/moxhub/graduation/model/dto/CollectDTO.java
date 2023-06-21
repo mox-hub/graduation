@@ -10,9 +10,12 @@ package cn.moxhub.graduation.model.dto;
 
 public class CollectDTO {
 
-    Integer collectId;
-    Integer userId;
-    Integer imageId;
+    private Integer collectId;
+    private Integer userId;
+    private Integer imageId;
+    private Integer promptId;
+    private Integer isShared;
+    private Integer rate;
     Integer pageIndex;
     Integer pageSize;
 
@@ -55,5 +58,43 @@ public class CollectDTO {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getPromptId() {
+        return promptId;
+    }
+
+    public void setPromptId(Integer promptId) {
+        this.promptId = promptId;
+    }
+
+    public Integer getIsShared() {
+        return isShared;
+    }
+
+    public void setIsShared(Integer isShared) {
+        this.isShared = isShared;
+    }
+
+    public Integer getRate() {
+        return rate;
+    }
+
+    public void setRate(Integer rate) {
+        this.rate = rate;
+    }
+
+    @Override
+    public String toString() {
+        return "CollectDTO{" +
+                "collectId=" + collectId +
+                ", userId=" + userId +
+                ", imageId=" + imageId +
+                ", promptId=" + promptId +
+                ", isShared=" + isShared +
+                ", rate=" + rate +
+                ", pageIndex=" + pageIndex +
+                ", pageSize=" + pageSize +
+                '}';
     }
 }

@@ -1,13 +1,17 @@
 package cn.moxhub.graduation.service.impl;
 
+import cn.moxhub.graduation.model.dto.HistoryDTO;
+import cn.moxhub.graduation.model.dto.ImageDTO;
 import cn.moxhub.graduation.model.dto.ResponseDTO;
 import cn.moxhub.graduation.model.sd.Img2ImgRequest;
 import cn.moxhub.graduation.model.sd.Text2ImgRequest;
 import cn.moxhub.graduation.model.sd.Text2ImgResponse;
+import cn.moxhub.graduation.service.HistoryService;
+import cn.moxhub.graduation.service.ImageService;
+import cn.moxhub.graduation.service.PromptService;
 import cn.moxhub.graduation.service.StableDiffusionService;
 import cn.moxhub.graduation.utils.Base64Util;
 import cn.moxhub.graduation.utils.QiniuUtil;
-import javafx.print.PaperSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -31,6 +36,8 @@ import java.util.List;
 @Slf4j
 @Service("sd")
 public class StableDiffusionServiceImpl implements StableDiffusionService {
+    @Resource
+    private ImageService imageService;
 
     private String path = "E:\\repos\\GithubRepos\\graduation\\graduation-server\\src\\main\\resources\\static\\images\\test.jpg";
 
@@ -48,7 +55,12 @@ public class StableDiffusionServiceImpl implements StableDiffusionService {
                 File image = new File(path);
                 InputStream inputStream = new FileInputStream(image);
                 MultipartFile multipartFile = new MockMultipartFile(image.getName(), inputStream);
-                images.set(i,QiniuUtil.uploadQNImg(multipartFile));
+                System.out.println(QiniuUtil.uploadQNImg(multipartFile));
+                ImageDTO imageDTO = new ImageDTO();
+                imageDTO.setImageUrl(QiniuUtil.uploadQNImg(multipartFile));
+                ResponseDTO responseDTO = imageService.createImage(imageDTO);
+                System.out.println(responseDTO.getData());
+                images.set(i,Integer.toString((Integer) responseDTO.getData()));
             }
             response.setImages(images);
             return new ResponseDTO(0,"操作成功",response);
