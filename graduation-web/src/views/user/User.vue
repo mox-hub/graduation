@@ -15,17 +15,18 @@
                         </a-avatar>
                         <a-descriptions :data="renderData" :column="2" align="right" layout="inline-horizontal"
                             :label-style="{
-                                width: '140px',
-                                fontWeight: 'normal',
-                                color: 'rgb(var(--gray-8))',
-                            }" :value-style="{
-    width: '200px',
-    paddingLeft: '8px',
-    textAlign: 'left',
-}">
+                        width: '140px',
+                        fontWeight: 'normal',
+                        color: 'rgb(var(--gray-8))',
+                    }" :value-style="{
+                        width: '200px',
+                        paddingLeft: '8px',
+                        textAlign: 'left',
+                    }">
                             <template #label="{ label }">测试 :</template>
                             <template #value="{ value, data }">
-                                <a-tag v-if="data.label === 'userSetting.label.certification'" color="green" size="small">
+                                <a-tag v-if="data.label === 'userSetting.label.certification'" color="green"
+                                    size="small">
                                     已认证
                                 </a-tag>
                                 <span v-else>{{ value }}</span>
@@ -126,6 +127,7 @@ const renderData = [
 </script>
 <style scoped>
 .page {
+    margin-top: 40px;
     height: 95vh;
 }
 

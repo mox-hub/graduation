@@ -1,13 +1,13 @@
 <template>
-    <a-layout>
+    <a-layout class="page">
         <!-- 侧边栏功能：选择参数 -->
-        <a-layout-sider class="layout-sider">
-            <a-space direction="vertical" style="margin-top: 20px;margin-bottom: 100px;">
+        <a-layout-sider class="layout-sider" :style="{ width: '300px' }">
+            <a-space direction="vertical" style="margin-top: 20px; margin-bottom: 100px; padding: 0 20px;">
                 <a-textarea class="textarea" placeholder="请输入正向文本" :max-length="128" allow-clear
-                    v-model:model-value="imageData.prompt" show-word-limit />
+                    v-model:model-value="imageData.prompt" show-word-limit style="border-radius: 8px;" />
                 <a-textarea class="textarea" placeholder="请输入反向文本" v-model:model-value="imageData.negative_prompt"
-                    style="margin-bottom: 20px;" :max-length="{ length: 128, errorOnly: true }" allow-clear
-                    show-word-limit />
+                    style="margin-bottom: 20px; border-radius: 8px;" :max-length="{ length: 128, errorOnly: true }"
+                    allow-clear show-word-limit />
                 <!-- 其他选项 -->
                 <a-collapse :default-active-key="defaultActiveKey" :bordered="false" expand-icon-position="right">
                     <!-- step2: 选择图片规格 -->
@@ -19,13 +19,17 @@
                                     <a-radio :value="item" :style="{ marginRight: '4px' }">
                                         <template #radio="{ checked }">
                                             <a-space align="start" class="custom-radio-card"
-                                                :class="{ 'custom-radio-card-checked': checked }"
-                                                :style="{ backgroundImage: 'url(' + 'https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp' + ')' }">
-                                                <div className="custom-radio-card-mask-dot">
+                                                :class="{ 'custom-radio-card-checked': checked }" :style="{
+            backgroundImage: `url(https://p1-arco.byteimg.com/tos-cn-i-uwbnlip3yd/a20012a2d4d5b9db43dfc6a01fe508c0.png~tplv-uwbnlip3yd-webp.webp)`,
+            borderRadius: '8px',
+            boxShadow: checked ? '0 0 10px rgba(0, 0, 0, 0.2)' : 'none',
+            transition: 'box-shadow 0.3s ease',
+        }">
+                                                <div class="custom-radio-card-mask-dot">
                                                     <icon-check />
                                                 </div>
                                                 <div>
-                                                    <div className="custom-radio-card-title">
+                                                    <div class="custom-radio-card-title">
                                                         Card
                                                     </div>
                                                 </div>
@@ -36,10 +40,10 @@
                             </a-radio-group>
                             <a-slider :min="128" :max="512" :step="32" :default-value="128"
                                 v-model:model-value="imageData.width" :show-ticks="true" :style="{ width: '100%' }"
-                                show-input />
+                                show-input style="margin-top: 20px;" />
                             <a-slider :min="128" :max="512" :step="32" :default-value="128"
                                 v-model:model-value="imageData.height" :show-ticks="true" :style="{ width: '100%' }"
-                                show-input />
+                                show-input style="margin-top: 20px;" />
                         </a-space>
                     </a-collapse-item>
                     <!-- step3: 选择生成步数 -->
@@ -87,16 +91,15 @@
                         </template>
                         <a-radio-group v-model:model-value="imageData.style">
                             <template v-for="(item, index) in styleList" :key="index">
-                                <a-radio :value="item.value" :style="{ marginRight: '4px' }"
-                                    :disabled="!styleChecked">
+                                <a-radio :value="item.value" :style="{ marginRight: '4px' }" :disabled="!styleChecked">
                                     <template #radio="{ checked }">
                                         <a-space align="start" class="custom-radio-card"
-                                                 :style="{backgroundImage:'url(' + item.image + ')'}"
-                                                 :class="{ 'custom-radio-card-checked': checked }">
+                                            :style="{ backgroundImage: 'url(' + item.image + ')' }"
+                                            :class="{ 'custom-radio-card-checked': checked }">
                                             <div className="custom-radio-card-mask">
                                                 <div className="custom-radio-card-mask-dot" />
                                             </div>
-                                            <div >
+                                            <div>
                                                 <div className="custom-radio-card-title">
                                                     {{ item.name }}
                                                 </div>
@@ -151,7 +154,7 @@
                             </span>
                         </template>
                         <a-select :style="{ width: '100%' }" v-model="imageData.sampler_index" placeholder="请选择采样方法..."
-                                  :disabled="!sampleChecked">
+                            :disabled="!sampleChecked">
                             <a-option>Euler</a-option>
                             <a-option>Shanghai</a-option>
                             <a-option>Guangzhou</a-option>
@@ -161,7 +164,7 @@
                 </a-collapse>
             </a-space>
             <!-- 按钮控件 -->
-            <a-space direction="vertical">
+            <a-space direction="vertical" style="padding: 0 20px;">
                 <a-divider />
                 <a-space class="button-box">
                     <!-- 选择图片数量 -->
@@ -182,25 +185,30 @@
                     </a-select>
                     <a-divider />
                     <a-button type="primary" size="large" :style="{ width: '200px', borderRadius: '10px' }"
-                        @click="handleGenerate">生成</a-button>
+                        @click="handleGenerate">
+                        生成
+                    </a-button>
                 </a-space>
             </a-space>
         </a-layout-sider>
-        <a-layout-content class="layout-content">
+        <a-layout-content class="layout-content" style="padding: 20px;">
             <!-- 页面标题 -->
             <div class="title-box">
-                <div class="title-text">
+                <div class="title-text" style="font-size: 24px; font-weight: bold;">
                     Stable-diffusion：通过文本生成风格化图片
                 </div>
             </div>
             <!-- card -->
-            <a-card class="body-card" style="text-align: center;">
+            <a-card class="body-card"
+                style="text-align: center; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
                 <!-- 图片预览框 -->
                 <a-carousel animation-name="card" indicator-type="slider" indicator-position="outer" :style="{
-                    width: '1024px',
-                    height: '512px',
-                }">
-                    <a-carousel-item v-for="item in imageList.image">
+            width: '100%',
+            maxWidth: '1024px',
+            height: '512px',
+            margin: '0 auto',
+        }">
+                    <a-carousel-item v-for="item in imageList.image" :key="item">
                         <a-image class="image" fit="cover" :src="item" v-model:width="width" v-model:height="height" />
                     </a-carousel-item>
                 </a-carousel>
@@ -214,16 +222,16 @@
 </template>
 
 <script setup lang='ts'>
-import {reactive, ref} from 'vue'
-import {getData, text2img, insertData} from '../../api'
-import {useRoute} from 'vue-router'
-import {Notification, Button, Message} from '@arco-design/web-vue';
+import { reactive, ref } from 'vue'
+import { getData, text2img, insertData } from '../../api'
+import { useRoute } from 'vue-router'
+import { Notification, Button, Message } from '@arco-design/web-vue';
 import router from "../../router/router";
 // 使用路由功能获取参数
 const route = useRoute()
 // 展示图片的列表
 const imageList = reactive({
-  image:["http://fpoimg.com/512?text=Stable%20Diffusion"]
+    image: ["http://fpoimg.com/512?text=Stable%20Diffusion"]
 })
 
 let tmpImage = "http://fpoimg.com/512?text=Stable%20Diffusion"
@@ -301,8 +309,8 @@ const promptRequest = reactive({
     style: "Katsuhiro Otomo",
     negative_prompt: "",
     sampler_index: "Euler",
-    pageIndex:1,
-    pageSize:10,
+    pageIndex: 1,
+    pageSize: 10,
 })
 
 const historyRequest = reactive({
@@ -331,30 +339,30 @@ const generateImage = (data: any) => {
     createPrompt();
 
     text2img("/sd/text2img", data).then(async (res) => {
-      // 添加历史记录
-      historyRequest.imageId = Number(res.data.images[0])
-      createHistory()
-      // 清空展示列表
-      imageList.image.length = 0;
-      let list = res.data.images
-      for (let i = 0; i < list.length; i++) {
-        let imageId = Number(res.data.images[i])
-        // console.log(imageId)
-        imageRequest.imageId = imageId
-        await getImageById(imageRequest)
-      }
-      console.log("111")
-      // imageList.image.values = res.data.images
-      console.log(imageList.image)
+        // 添加历史记录
+        historyRequest.imageId = Number(res.data.images[0])
+        createHistory()
+        // 清空展示列表
+        imageList.image.length = 0;
+        let list = res.data.images
+        for (let i = 0; i < list.length; i++) {
+            let imageId = Number(res.data.images[i])
+            // console.log(imageId)
+            imageRequest.imageId = imageId
+            await getImageById(imageRequest)
+        }
+        console.log("111")
+        // imageList.image.values = res.data.images
+        console.log(imageList.image)
     })
 }
 
 const getImageById = (data: any) => {
-  getData(data, '/image/getImageByImageId').then((res) => {
-      console.log(res.data)
-      imageList.image.push(res.data.imageUrl)
+    getData(data, '/image/getImageByImageId').then((res) => {
+        console.log(res.data)
+        imageList.image.push(res.data.imageUrl)
 
-  })
+    })
 }
 const getImageData = (data: any) => {
     getData(data, '/image/getImageByImageId').then((res) => {
@@ -366,13 +374,13 @@ const getImageData = (data: any) => {
 }
 
 const createHistory = () => {
-    insertData(historyRequest,'/history/createHistory').then((res) => {
+    insertData(historyRequest, '/history/createHistory').then((res) => {
         console.log(res)
     })
 }
 
 const createPrompt = () => {
-    insertData(promptRequest,'/prompt/createPrompt').then((res) => {
+    insertData(promptRequest, '/prompt/createPrompt').then((res) => {
         historyRequest.promptId = res.data
         console.log("prompt res:")
         console.log(res)
@@ -392,20 +400,20 @@ const getPromptData = (data: any) => {
         imageData.sampler_index = res.data.sampler_index
         stepChecked.value = true
         sampleChecked.value = true
-        keywordChecked.value =true
+        keywordChecked.value = true
         styleChecked.value = true
-        defaultActiveKey.value = ['1','2','3','4']
+        defaultActiveKey.value = ['1', '2', '3', '4']
     })
 }
 
 // 生成图片按钮绑定事件
 const handleGenerate = (e: Event) => {
     if (localStorage.getItem("token") != 'token') {
-      Message.error({
-        content:'请先登录！',
-        closable: true
-      })
-      router.push("/login")
+        Message.error({
+            content: '请先登录！',
+            closable: true
+        })
+        router.push("/login")
     }
     generateImage(imageData);
 }
@@ -417,9 +425,9 @@ const width = computed(() => {
 const height = computed(() => {
     return imageData.height * 1
 })
-watch(()=> [imageData.width,imageData.height],([newWidth,newHeight],[oldWidth,oldHeight])=>{
-    imageList.image = ['http://fpoimg.com/'+newWidth+'x'+newHeight+'?text=Stable%20Diffusion']
-    tmpImage = 'http://fpoimg.com/'+newWidth+'x'+newHeight+'?text=Stable%20Diffusion'
+watch(() => [imageData.width, imageData.height], ([newWidth, newHeight], [oldWidth, oldHeight]) => {
+    imageList.image = ['http://fpoimg.com/' + newWidth + 'x' + newHeight + '?text=Stable%20Diffusion']
+    tmpImage = 'http://fpoimg.com/' + newWidth + 'x' + newHeight + '?text=Stable%20Diffusion'
 })
 
 // 监控生成多张图片事件
@@ -444,28 +452,32 @@ watch(() => imageData.batch_size, (newVal, oldVal) => {
 
 // 处理分享链接进入逻辑
 onMounted(async () => {
-  console.log(route.params);
-  if (route.params.image != '' && route.params.prompt != '') {
-    promptRequest.promptId = Number(route.params.prompt)
-    await getPromptData(promptRequest)
-    imageRequest.imageId = Number(route.params.image)
-    await getImageData(imageRequest)
-    Notification.success({
-      id: 'link',
-      title: '分享链接解析成功',
-      content: '欢迎使用Stable Diffusion图片生成系统，请查看您的获取的分享内容！',
-      closable: true,
-      duration: 8000,
-    })
-  }
+    console.log(route.params);
+    if (route.params.image != '' && route.params.prompt != '') {
+        promptRequest.promptId = Number(route.params.prompt)
+        await getPromptData(promptRequest)
+        imageRequest.imageId = Number(route.params.image)
+        await getImageData(imageRequest)
+        Notification.success({
+            id: 'link',
+            title: '分享链接解析成功',
+            content: '欢迎使用Stable Diffusion图片生成系统，请查看您的获取的分享内容！',
+            closable: true,
+            duration: 8000,
+        })
+    }
 })
 </script>
 <style scoped>
+.page {
+    margin-top: 50px;
+}
+
 .layout-sider {
     text-align: center;
     background-color: var(--color-neutral-1);
-    min-width: 420px;
-    height: 1200px;
+    min-width: 400px;
+    height: 95vh;
 
 }
 
@@ -477,13 +489,14 @@ onMounted(async () => {
 .layout-content {
     /* background-color: var(--color-bg-3); */
     min-width: 420px;
-    height: 1200px;
+    height: 95vh;
+    margin-top: 64px;
 }
 
 .title-box {
     display: table;
     margin: auto;
-    padding: 40px;
+    padding: 20px;
 }
 
 .title-text {

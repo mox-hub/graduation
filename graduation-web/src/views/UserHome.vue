@@ -2,27 +2,31 @@
     <!-- 用户页面：用户其他页面以插件形式引入 -->
     <div class="page">
         <a-layout>
-            <a-layout-header>
+            <a-layout-header class="header">
                 <!-- 首页导航栏 -->
-                <a-page-header :style="{ background: 'var(--color-bg-1)' }" title="Stable-diffusion" :show-back=false>
+                <a-page-header class="nav-header" title="Stable-diffusion" :show-back=false>
                     <template #subtitle>
                         <a-space>
-                            <span>A text to image AI generation</span>
-                            <a-tag color="blue" size="small">dev</a-tag>
-                            <!-- 页面切换功能 -->
-                            <a-space class="button-box">
-                                <router-link to="/home/generate">
-                                    <a-button shape="round">图片生成</a-button>
-                                </router-link>
-                                <a-divider direction="vertical" />
-                                <router-link :to="{ name: 'collect' }">
-                                    <a-button shape="round">我的收藏</a-button>
-                                </router-link>
-                                <a-divider direction="vertical" />
-                                <router-link :to="{ name: 'user' }">
-                                    <a-button shape="round">关于我</a-button>
-                                </router-link>
-                            </a-space>
+                            <div class="nav-content">
+                                <div class="nav-left">
+                                    <span class="subtitle">A text to image AI generation</span>
+                                    <a-tag color="blue" size="small">dev</a-tag>
+                                </div>
+
+                                <div class="nav-menu">
+                                    <a-space size="large">
+                                        <router-link to="/home/generate">
+                                            <a-button type="text">图片生成</a-button>
+                                        </router-link>
+                                        <router-link :to="{ name: 'collect' }">
+                                            <a-button type="text">我的收藏</a-button>
+                                        </router-link>
+                                        <router-link :to="{ name: 'user' }">
+                                            <a-button type="text">关于我</a-button>
+                                        </router-link>
+                                    </a-space>
+                                </div>
+                            </div>
                         </a-space>
                     </template>
                     <template #extra>
@@ -48,25 +52,25 @@
                                 </a-button>
                             </a-tooltip>
                             <a-space v-if="isAuth == 'false'">
-                              <!-- 登录 -->
-                              <router-link to="/register">
-                                <a-button type="outline" shape="round">注 册</a-button>
-                              </router-link>
-                              <!-- 注册 -->
-                              <router-link to="/login">
-                                <a-button type="primary" shape="round">登 录</a-button>
-                              </router-link>
-                              <a-divider direction="vertical" />
-                              <!-- github跳转 -->
-                              <a-button type="dashed" shape="circle" v-on:click="jumpToGithub">
-                                <icon-github />
-                              </a-button>
+                                <!-- 登录 -->
+                                <router-link to="/register">
+                                    <a-button type="outline" shape="round">注 册</a-button>
+                                </router-link>
+                                <!-- 注册 -->
+                                <router-link to="/login">
+                                    <a-button type="primary" shape="round">登 录</a-button>
+                                </router-link>
+                                <a-divider direction="vertical" />
+                                <!-- github跳转 -->
+                                <a-button type="dashed" shape="circle" v-on:click="jumpToGithub">
+                                    <icon-github />
+                                </a-button>
                             </a-space>
                             <a-space v-if="isAuth == 'true'">
-                              <a-avatar :style="{ backgroundColor: '#3370ff' }">
-                                <IconUser />
-                              </a-avatar>
-                              <a-button type="primary" shape="round" v-on:click="logout">退出登录</a-button>
+                                <a-avatar :style="{ backgroundColor: '#3370ff' }">
+                                    <IconUser />
+                                </a-avatar>
+                                <a-button type="primary" shape="round" v-on:click="logout">退出登录</a-button>
                             </a-space>
 
                         </a-space>
@@ -105,13 +109,13 @@ const changeTheme = () => {
 }
 // 跳转到仓库地址
 const jumpToGithub = () => {
-  window.open('https://github.com/mox-hub/graduation',"_blank")
+    window.open('https://github.com/mox-hub/graduation', "_blank")
 }
 
 const logout = () => {
-  localStorage.removeItem("token")
-  location.reload()
-  console.log(localStorage.getItem("token"))
+    localStorage.removeItem("token")
+    location.reload()
+    console.log(localStorage.getItem("token"))
 }
 
 onMounted(() => {
@@ -131,12 +135,50 @@ onMounted(() => {
     background-color: var(--color-neutral-2);
 }
 
-.layout-tabs {
+.header {
+    position: fixed;
     width: 100%;
-    text-align: center;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background-color: rgba(var(--gray-2), 0.6);
+    height: 64px;
 }
 
-.button-box {
-    margin-left: 100px;
+.nav-header {
+    background: transparent !important;
+    backdrop-filter: none;
+}
+
+.nav-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.nav-menu {
+    margin-left: 24px;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: var(--color-text-2);
+}
+
+.layout-content {
+    margin-top: 64px;
+    padding: 24px;
 }
 </style>

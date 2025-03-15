@@ -39,13 +39,13 @@ public class StableDiffusionServiceImpl implements StableDiffusionService {
     @Resource
     private ImageService imageService;
 
-    private String path = "E:\\repos\\GithubRepos\\graduation\\graduation-server\\src\\main\\resources\\static\\images\\test.jpg";
+    private String path = "src/main/resources/static/images/test.jpg";
 
     @Override
     public ResponseDTO textToImage(Text2ImgRequest request) {
         try {
             String url = "http://localhost:7860/sdapi/v1/txt2img";
-            RestTemplate restTemplate = new RestTemplate();
+              RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Text2ImgResponse> text2ImgResponse = restTemplate.postForEntity(url, request, Text2ImgResponse.class);
             Text2ImgResponse response = text2ImgResponse.getBody();
 

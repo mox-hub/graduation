@@ -1,8 +1,25 @@
-HELP.md
+### Maven ###
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
 !**/src/test/**
+HELP.md
+
+### Node.js ###
+node_modules/
+dist/
+dist-ssr/
+*.local
+package-lock.json
+
+### Logs ###
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
 ### STS ###
 .apt_generated
@@ -29,3 +46,16 @@ build/
 
 ### VS Code ###
 .vscode/
+.history/
+!.vscode/extensions.json
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Others ###
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
