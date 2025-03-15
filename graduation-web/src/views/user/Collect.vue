@@ -203,11 +203,11 @@
                                         <template #cell="{ record }">
                                             <a-space>
                                                 <a-button status="danger" shape="round" type="text" @click="
-                                                    $modal.info({
-                                                        title: 'Name',
-                                                        content: record.historyId,
-                                                    })
-                                                    ">
+                $modal.info({
+                    title: 'Name',
+                    content: record.historyId,
+                })
+                ">
                                                     <template #icon>
                                                         <icon-delete />
                                                     </template>
@@ -222,9 +222,9 @@
                     </div>
                 </a-tab-pane>
             </a-tabs>
-            </a-layout-content>
-            <!-- 弹出模态框 -->
-            <a-modal v-model:visible="imageDetailVisible" width="800px">
+        </a-layout-content>
+        <!-- 弹出模态框 -->
+        <a-modal v-model:visible="imageDetailVisible" width="800px">
             <template #title> 收藏详情 </template>
             <!-- 单张图片的详情展示 -->
             <a-space class="image-detail" direction="vertical" size="large">
@@ -232,33 +232,33 @@
                 <a-image fit="cover" :src="imageDetail" v-model:width="width" v-model:height="height"
                     style="border-radius: 10px" />
                 <!-- 打分部分 -->
-                <a-rate default-value="{{descriptions.rate}}" />
+                <a-rate :default-value="descriptions.rate" />
                 <!-- 提示词部分 -->
                 <a-descriptions title="生成提示词" layout="inline-vertical" bordered>
                     <a-descriptions-item label="正向提示词">{{
-                        prompt.prompt
-                        }}</a-descriptions-item>
+                prompt.prompt
+            }}</a-descriptions-item>
                     <a-descriptions-item label="反向提示词">{{
-                        prompt.negative_prompt
-                        }}</a-descriptions-item>
+                    prompt.negative_prompt
+                }}</a-descriptions-item>
                 </a-descriptions>
                 <!-- 其他参数信息 -->
                 <a-descriptions title="其他参数" layout="inline-vertical" bordered>
                     <a-descriptions-item label="生成数量">{{
-                        descriptions.batch_size
-                        }}</a-descriptions-item>
+                    descriptions.batch_size
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成步数">{{
-                        descriptions.steps
-                        }}</a-descriptions-item>
+                    descriptions.steps
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成采样参数">{{
-                        descriptions.cfgScale
-                        }}</a-descriptions-item>
+                    descriptions.cfgScale
+                }}</a-descriptions-item>
                     <a-descriptions-item label="采样方法">{{
-                        descriptions.sampler_index
-                        }}</a-descriptions-item>
+                    descriptions.sampler_index
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成图片规格">{{
-                        descriptions.size
-                        }}</a-descriptions-item>
+                    descriptions.size
+                }}</a-descriptions-item>
                 </a-descriptions>
             </a-space>
             <template #footer>
@@ -308,7 +308,7 @@
                 </a-space>
             </template>
         </a-modal>
-<a-modal v-model:visible="historyDetailVisible" width="800px">
+        <a-modal v-model:visible="historyDetailVisible" width="800px">
             <template #title> 历史记录详情 </template>
             <!-- 单张图片的详情展示 -->
             <a-space class="image-detail" direction="vertical" size="large">
@@ -318,29 +318,29 @@
                 <!-- 提示词部分 -->
                 <a-descriptions title="生成提示词" layout="inline-vertical" bordered>
                     <a-descriptions-item label="正向提示词">{{
-                        prompt.prompt
-                        }}</a-descriptions-item>
+                prompt.prompt
+            }}</a-descriptions-item>
                     <a-descriptions-item label="反向提示词">{{
-                        prompt.negative_prompt
-                        }}</a-descriptions-item>
+                    prompt.negative_prompt
+                }}</a-descriptions-item>
                 </a-descriptions>
                 <!-- 其他参数信息 -->
                 <a-descriptions title="其他参数" layout="inline-vertical" bordered>
                     <a-descriptions-item label="生成数量">{{
-                        descriptions.batch_size
-                        }}</a-descriptions-item>
+                    descriptions.batch_size
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成步数">{{
-                        descriptions.steps
-                        }}</a-descriptions-item>
+                    descriptions.steps
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成采样参数">{{
-                        descriptions.cfgScale
-                        }}</a-descriptions-item>
+                    descriptions.cfgScale
+                }}</a-descriptions-item>
                     <a-descriptions-item label="采样方法">{{
-                        descriptions.sampler_index
-                        }}</a-descriptions-item>
+                    descriptions.sampler_index
+                }}</a-descriptions-item>
                     <a-descriptions-item label="生成图片规格">{{
-                        descriptions.size
-                        }}</a-descriptions-item>
+                    descriptions.size
+                }}</a-descriptions-item>
                 </a-descriptions>
             </a-space>
             <template #footer>
@@ -369,7 +369,7 @@
                 </a-space>
             </template>
         </a-modal>
-</a-layout>
+    </a-layout>
 </template>
 
 <script setup lang="ts">
@@ -378,6 +378,8 @@ import { getData, deleteData, updateData, insertData } from '../../api'
 import useClipboard from 'vue-clipboard3'
 import { Modal } from '@arco-design/web-vue'
 import router from '../../router/router'
+import { CollectImageVO } from '../../types/VO/CollectImageVO'
+import {DescriptionsVO} from '../../types/VO/DescriptionsVO'
 const { toClipboard } = useClipboard()
 const checkAll = ref(false)
 const checkboxData = ref([])
@@ -422,9 +424,9 @@ const height = computed(() => {
     return imageData.value.height * 2
 })
 
-const collectList = ref([])
+const collectList = ref<CollectImageVO[]>([])
 
-// 设置控件的显示情况，ususal 显示普通按钮，manage 显示管理按钮
+// 设置控件的显示情况，usual 显示普通按钮，manage 显示管理按钮
 const buttonFlag = ref('usual')
 const checkboxFlag = ref(false)
 
@@ -605,7 +607,7 @@ const prompt = reactive({
     negative_prompt: 'negative test',
 })
 // 其他描述
-const descriptions = reactive({
+const descriptions = reactive<DescriptionsVO>({
     batch_size: 1,
     steps: 20,
     sampler_index: 'Euler',
@@ -679,7 +681,7 @@ const createShareData = () => {
 const createCollectData = () => {
     insertData(collectRequest.value, '/collect/createCollect').then((res) => {
         console.log(res)
-        if (res.code == 0) {
+        if (res.data.code == 0) {
             Modal.success({
                 title: '收藏提示',
                 content: '本图片已成功收藏',
@@ -842,6 +844,7 @@ getShareList()
 .page {
     margin-top: 50px;
 }
+
 .collect-tabs {
     padding: 20px;
 }
@@ -970,4 +973,4 @@ getShareList()
 .custom-checkbox-card-checked .custom-checkbox-card-mask-dot {
     background-color: rgb(var(--primary-6));
 }
-</style>
+</style>../../types/VO/CollectImageVO

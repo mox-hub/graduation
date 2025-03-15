@@ -39,6 +39,7 @@ public class StableDiffusionServiceImpl implements StableDiffusionService {
     @Resource
     private ImageService imageService;
 
+    // 本地存储的图片路径
     private String path = "src/main/resources/static/images/test.jpg";
 
     @Override

@@ -4,6 +4,7 @@ import cn.moxhub.graduation.model.sd.Text2ImgResponse;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -14,7 +15,7 @@ import java.util.Date;
  * @Date :2023/5/15 22:29
  * @Version : v1.0
  **/
-
+@Data
 public class HistoryDTO {
 
     private Integer historyId;
@@ -28,75 +29,4 @@ public class HistoryDTO {
     private Integer pageIndex;
     private Integer pageSize;
 
-    public Integer getHistoryId() {
-        return historyId;
-    }
-
-    public void setHistoryId(Integer historyId) {
-        this.historyId = historyId;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public Integer getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(Integer imageId) {
-        this.imageId = imageId;
-    }
-
-    public Integer getPromptId() {
-        return promptId;
-    }
-
-    public void setPromptId(Integer promptId) {
-        this.promptId = promptId;
-    }
-
-    public Integer getImageNum() {
-        return imageNum;
-    }
-
-    public void setImageNum(Integer imageNum) {
-        this.imageNum = imageNum;
-    }
-
-    public String getHistoryType() {
-        return historyType;
-    }
-
-    public void setHistoryType(String historyType) {
-        this.historyType = historyType;
-    }
-
-    public Date getGenerateTime() {
-        return generateTime;
-    }
-
-    public void setGenerateTime(Date generateTime) {
-        this.generateTime = generateTime;
-    }
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
-
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
 }

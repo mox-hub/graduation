@@ -12,6 +12,7 @@ import io.swagger.models.auth.In;
  * @Date :2023/5/3 10:18
  * @Version : v1.0
  **/
+
 @TableName("collect")
 public class Collect {
     @TableId(type = IdType.AUTO)
